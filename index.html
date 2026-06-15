@@ -560,30 +560,51 @@
             <div class="cam-body">
               <img src="1.png" class="cam-img" alt="Top View">
 
-              <!-- Blue/teal glow on upper-left arc of tyre -->
-              <div style="position:absolute;inset:0;pointer-events:none;z-index:1;
-                background:radial-gradient(ellipse at 28% 26%,
-                  rgba(20,160,255,0.45) 0%,
-                  rgba(0,130,230,0.28) 22%,
-                  rgba(0,100,200,0.12) 42%,
-                  transparent 65%);
-                border-radius:inherit"></div>
-
-              <!-- Pointer lines + dots from tyre surface to CONFIDENCE panel (SVG overlay) -->
+              <!-- SVG: solid blue donut arc + coloured pointer dots/lines -->
+              <!-- viewBox 0 0 100 100, preserveAspectRatio none = coords are % of cam-body -->
               <svg viewBox="0 0 100 100" preserveAspectRatio="none"
-                   style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible">
-                <!-- Orange: Crack dot on upper tyre → label -->
-                <circle cx="34" cy="22" r="2" fill="#ff8c00" opacity=".95"/>
-                <line x1="36" y1="22" x2="72" y2="28" stroke="#ff8c00" stroke-width=".8" opacity=".8"/>
-                <!-- Yellow: Wear dot on mid-left tyre → label -->
-                <circle cx="22" cy="46" r="2" fill="#ffd000" opacity=".95"/>
-                <line x1="24" y1="46" x2="72" y2="38" stroke="#ffd000" stroke-width=".8" opacity=".8"/>
-                <!-- Gray: Bulge dot on lower tyre → label -->
-                <circle cx="29" cy="66" r="2" fill="#6688aa" opacity=".95"/>
-                <line x1="31" y1="66" x2="72" y2="48" stroke="#6688aa" stroke-width=".8" opacity=".8"/>
+                   style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible">
+                <defs>
+                  <linearGradient id="blueArcGrad" x1="10%" y1="90%" x2="70%" y2="10%">
+                    <stop offset="0%"   stop-color="#0850b8" stop-opacity="0.65"/>
+                    <stop offset="100%" stop-color="#3aaeff" stop-opacity="0.35"/>
+                  </linearGradient>
+                </defs>
+
+                <!--
+                  Donut sector: upper-left arc of wheel
+                  Center ≈ (42,50), outer r=36, inner r=22
+                  SVG angle 130° → 270° clockwise  (= lower-left to top of circle)
+                  130°: cos=-0.643  sin=+0.766
+                  270°: cos=0       sin=-1
+                  Outer arc start : 42+36*(-0.643)=18.9,  50+36*(0.766)=77.6
+                  Outer arc end   : 42+36*(0)=42,          50+36*(-1)=14
+                  Inner arc start : 42+22*(-0.643)=27.8,  50+22*(0.766)=66.9
+                  Inner arc end   : 42+22*(0)=42,          50+22*(-1)=28
+                  140° arc → large-arc-flag=0, clockwise outer→sweep=1, counter inner→sweep=0
+                -->
+                <path d="M 18.9 77.6
+                         A 36 36 0 0 1 42 14
+                         L 42 28
+                         A 22 22 0 0 0 27.8 66.9
+                         Z"
+                      fill="url(#blueArcGrad)"
+                      stroke="rgba(80,190,255,0.55)" stroke-width="0.7"/>
+
+                <!-- Pointer: orange dot on tyre (~220° SVG, upper arc) → conf panel row 1 -->
+                <circle cx="21" cy="31" r="2.2" fill="#ff8c00" opacity="0.95"/>
+                <line x1="23" y1="31" x2="68" y2="28" stroke="#ff8c00" stroke-width="0.9" opacity="0.9"/>
+
+                <!-- Pointer: yellow dot on tyre (~185° SVG, mid-left) → conf panel row 2 -->
+                <circle cx="13" cy="47" r="2.2" fill="#ffd000" opacity="0.95"/>
+                <line x1="15" y1="47" x2="68" y2="37" stroke="#ffd000" stroke-width="0.9" opacity="0.9"/>
+
+                <!-- Pointer: gray dot on tyre (~155° SVG, lower-left arc) → conf panel row 3 -->
+                <circle cx="17" cy="63" r="2.2" fill="#7a9ab8" opacity="0.95"/>
+                <line x1="19" y1="63" x2="68" y2="46" stroke="#7a9ab8" stroke-width="0.9" opacity="0.9"/>
               </svg>
 
-              <!-- CONFIDENCE label panel (right side, lines terminate here) -->
+              <!-- CONFIDENCE label panel – lines terminate at left edge -->
               <div class="conf-overlay">
                 <div class="conf-ttl">CONFIDENCE</div>
                 <div class="conf-legend-row">
@@ -629,19 +650,30 @@
             <div class="cam-body">
               <img src="2.png" class="cam-img" alt="Sidewall View">
 
-              <!-- Teal/cyan scan colour shade over car body -->
-              <div style="position:absolute;inset:0;pointer-events:none;z-index:1;
-                background:
-                  linear-gradient(160deg,
-                    rgba(0,210,255,0.18) 0%,
-                    rgba(0,180,240,0.13) 40%,
-                    rgba(0,140,210,0.08) 70%,
-                    transparent 100%);
-                border-radius:inherit"></div>
-              <!-- Left-edge glow streak (sidewall highlight) -->
-              <div style="position:absolute;top:10%;bottom:10%;left:8%;width:18%;pointer-events:none;z-index:1;
-                background:linear-gradient(90deg, rgba(0,220,255,0.22) 0%, transparent 100%);
-                border-radius:4px"></div>
+              <!-- SVG: teal/cyan solid fill over car body panels (top-down view) -->
+              <!-- Car body occupies roughly x:22–78%, y:14–86% of cam area -->
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none"
+                   style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible">
+                <defs>
+                  <linearGradient id="carTeal" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stop-color="#00c8e0" stop-opacity="0.35"/>
+                    <stop offset="40%"  stop-color="#00b8d4" stop-opacity="0.22"/>
+                    <stop offset="100%" stop-color="#00a8c8" stop-opacity="0.12"/>
+                  </linearGradient>
+                </defs>
+                <!-- Main car body fill – covers car silhouette area -->
+                <rect x="22" y="14" width="56" height="72" rx="6"
+                      fill="url(#carTeal)"/>
+                <!-- Left body panel strip – stronger teal on the left side panel -->
+                <rect x="22" y="20" width="12" height="60" rx="3"
+                      fill="rgba(0,210,235,0.30)"/>
+                <!-- Right body panel strip -->
+                <rect x="66" y="20" width="12" height="60" rx="3"
+                      fill="rgba(0,210,235,0.20)"/>
+                <!-- Roof/bonnet highlight -->
+                <rect x="30" y="14" width="40" height="72" rx="4"
+                      fill="rgba(0,195,225,0.10)"/>
+              </svg>
 
               <div class="scan-line"></div>
               <!-- Bounding boxes -->
