@@ -559,7 +559,31 @@
             <div class="cam-hdr">CAM 01 - TOP)</div>
             <div class="cam-body">
               <img src="1.png" class="cam-img" alt="Top View">
-              <!-- Legend-style confidence overlay -->
+
+              <!-- Blue/teal glow on upper-left arc of tyre -->
+              <div style="position:absolute;inset:0;pointer-events:none;z-index:1;
+                background:radial-gradient(ellipse at 28% 26%,
+                  rgba(20,160,255,0.45) 0%,
+                  rgba(0,130,230,0.28) 22%,
+                  rgba(0,100,200,0.12) 42%,
+                  transparent 65%);
+                border-radius:inherit"></div>
+
+              <!-- Pointer lines + dots from tyre surface to CONFIDENCE panel (SVG overlay) -->
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none"
+                   style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible">
+                <!-- Orange: Crack dot on upper tyre → label -->
+                <circle cx="34" cy="22" r="2" fill="#ff8c00" opacity=".95"/>
+                <line x1="36" y1="22" x2="72" y2="28" stroke="#ff8c00" stroke-width=".8" opacity=".8"/>
+                <!-- Yellow: Wear dot on mid-left tyre → label -->
+                <circle cx="22" cy="46" r="2" fill="#ffd000" opacity=".95"/>
+                <line x1="24" y1="46" x2="72" y2="38" stroke="#ffd000" stroke-width=".8" opacity=".8"/>
+                <!-- Gray: Bulge dot on lower tyre → label -->
+                <circle cx="29" cy="66" r="2" fill="#6688aa" opacity=".95"/>
+                <line x1="31" y1="66" x2="72" y2="48" stroke="#6688aa" stroke-width=".8" opacity=".8"/>
+              </svg>
+
+              <!-- CONFIDENCE label panel (right side, lines terminate here) -->
               <div class="conf-overlay">
                 <div class="conf-ttl">CONFIDENCE</div>
                 <div class="conf-legend-row">
@@ -604,6 +628,21 @@
             <div class="cam-hdr">CAM 02 - SIDEWALL)</div>
             <div class="cam-body">
               <img src="2.png" class="cam-img" alt="Sidewall View">
+
+              <!-- Teal/cyan scan colour shade over car body -->
+              <div style="position:absolute;inset:0;pointer-events:none;z-index:1;
+                background:
+                  linear-gradient(160deg,
+                    rgba(0,210,255,0.18) 0%,
+                    rgba(0,180,240,0.13) 40%,
+                    rgba(0,140,210,0.08) 70%,
+                    transparent 100%);
+                border-radius:inherit"></div>
+              <!-- Left-edge glow streak (sidewall highlight) -->
+              <div style="position:absolute;top:10%;bottom:10%;left:8%;width:18%;pointer-events:none;z-index:1;
+                background:linear-gradient(90deg, rgba(0,220,255,0.22) 0%, transparent 100%);
+                border-radius:4px"></div>
+
               <div class="scan-line"></div>
               <!-- Bounding boxes -->
               <div class="bbox c" style="top:22%;left:12%;width:65%;height:22%">
